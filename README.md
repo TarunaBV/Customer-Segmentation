@@ -1,7 +1,5 @@
 # Customer Segmentation
 
----
-
 ## Problem Statement : 
 In business, understanding the customer's purchasing behavior is important in improving the business. Without segmentation, marketing become ineffective.
 
@@ -12,8 +10,6 @@ To segment customers into distinct groups based on their annual income and spend
 - Personalize marketing strategies
 - mprove customer retention
 - Increase profitability
-
----
 
 ## Project Approach
 ### Step 1: Data Understanding
@@ -48,8 +44,6 @@ To segment customers into distinct groups based on their annual income and spend
 
 ### Step 8: Business Interpretation
 - Label clusters based on spending behavior 
-
----
 
 ## Project Workflow
 
