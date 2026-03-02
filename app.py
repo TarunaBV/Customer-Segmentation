@@ -1,20 +1,95 @@
 import streamlit as st
 import pickle
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
 
 st.set_page_config(page_title="Customer Cluster Predictor", page_icon="🤖")
 
-model = pickle.load(open("D:\GITHUB\Customer Segmentation\model\model.pkl", "rb"))
-scaler = pickle.load(open("D:\GITHUB\Customer Segmentation\model\scaler.pkl", "rb"))
+model = pickle.load(open(r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\model\model.pkl", "rb"))
+scaler = pickle.load(open(r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\model\scaler.pkl", "rb"))
 
-st.title("Customer Segmentation App")
+st.markdown(
+    "<h1 style='text-align: center;'>Customer Segmentation App</h1>",
+    unsafe_allow_html=True
+)
 
 st.sidebar.title("Navigation 🧭")
 page = st.sidebar.radio("Go to", ["Home", "Predict", "Visualization"])
 
 if page == "Home":
-    st.write("Description add madu!")
+     # Hero Section
+    st.markdown("""
+    <div style='text-align:center; padding: 60px 20px;'>
+        <h1 style='font-size:40px; color:#4CAF50;'>
+        Customer Insights Dashboard
+        </h1>
+        <p style='font-size:22px; color:gray;'>
+        Discover meaningful customer groups using advanced machine learning.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
+    st.markdown("---")
+
+    # Features Section
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.markdown("""
+        <div style='padding:20px; border-radius:10px; background-color:#f5f5f5;'>
+            <h3>📊 Data Analysis</h3>
+            <p>
+            Analyze annual income and spending patterns 
+            to identify hidden customer segments.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("""
+        <div style='padding:20px; border-radius:10px; background-color:#f5f5f5;'>
+            <h3>🤖 ML Powered</h3>
+            <p>
+            Built using K-Means clustering with 
+            optimized cluster selection.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col3:
+        st.markdown("""
+        <div style='padding:20px; border-radius:10px; background-color:#f5f5f5;'>
+            <h3>🎯 Business Impact</h3>
+            <p>
+            Enables targeted marketing, customer retention,
+            and strategic decision making.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+    # Call To Action
+    st.markdown("""
+    <div style='text-align:center; padding: 40px;'>
+        <h2>Ready to Explore Insights?</h2>
+        <p style='color:gray; font-size:18px;'>
+        Use the navigation menu to predict customer segments 
+        and visualize clustering results.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("---")
+
+    # Footer
+    st.markdown("""
+    <div style='text-align:center; color:gray; padding:20px;'>
+    © 2026 Customer Segmentation Project | Built with Streamlit
+    </div>
+    """, unsafe_allow_html=True)
 elif page == "Predict":
     customer_id = st.text_input("Enter Customer Id : ")
     income = st.number_input("Annual income (k$)", min_value=0)
@@ -39,4 +114,40 @@ elif page == "Predict":
         st.success(f"Customer belongs to Cluster {prediction[0]}")
 
 elif page == "Visualization":
-    st.write("Visualization add madu!")
+
+    
+    st.subheader("📊 Customer Segmentation Visualization")
+
+    # Load dataset (use relative path)
+    df = pd.read_excel(r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\data\Mall Customers.xlsx")
+    # Select features
+    X = df[["Annual Income (k$)", "Spending Score (1-100)"]]
+
+    # Scale data
+    X_scaled = scaler.transform(X)
+
+    # Predict clusters
+    clusters = model.predict(X_scaled)
+
+    # Add cluster column
+    df["Cluster"] = clusters
+
+    # Plot
+    fig, ax = plt.subplots()
+
+    scatter = ax.scatter(
+        df["Annual Income (k$)"],
+        df["Spending Score (1-100)"],
+        c=df["Cluster"]
+    )
+
+    ax.set_xlabel("Annual Income (k$)")
+    ax.set_ylabel("Spending Score (1-100)")
+    ax.set_title("Customer Clusters")
+
+    st.pyplot(fig)
+
+    st.write("""
+    Each color represents a different customer segment identified 
+    by the K-Means clustering algorithm.
+    """)
