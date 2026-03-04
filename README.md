@@ -1,5 +1,7 @@
 # Customer Segmentation
-
+A machine learning web application that segments customers using K-Means clustering based on income and spending behavior.Built with Streamlit to provide interactive predictions and visual insights for data-driven marketing decisions.
+## Live demo :
+https://customer-segmentation-p1.streamlit.app/
 ## Problem Statement : 
 The retail industry deals with a large number of customers who have different purchasing behaviors and spending patterns. Without proper segmentation, it becomes difficult for businesses to understand customer needs and design effective marketing strategies. Companies need a way to identify groups of customers with similar characteristics from large datasets. Therefore, a data-driven approach such as clustering can be used to segment customers based on their income and spending behavior to support better business decision-making.
 
