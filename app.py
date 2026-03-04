@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Customer Cluster Predictor", page_icon="🤖")
 
-model = pickle.load(open(r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\model\model.pkl", "rb"))
-scaler = pickle.load(open(r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\model\scaler.pkl", "rb"))
+model = pickle.load(open(r"model\model.pkl", "rb"))
+scaler = pickle.load(open(r"model\scaler.pkl", "rb"))
 
 st.markdown(
     "<h1 style='text-align: center;'>Customer Segmentation App</h1>",
@@ -172,7 +172,7 @@ elif page == "Visualization":
 
     st.subheader("📊 Customer Segmentation Visualization")
 
-    df = pd.read_excel(r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\data\Mall Customers.xlsx")
+    df = pd.read_excel(r"data\Mall Customers.xlsx")
 
     X = df[['Annual Income (k$)', 'Spending Score (1-100)']]
     X_scaled = scaler.transform(X)
