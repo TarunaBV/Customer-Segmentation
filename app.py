@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Customer Cluster Predictor", page_icon="🤖")
 
-model = pickle.load(open(r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\model\model.pkl", "rb"))
-scaler = pickle.load(open(r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\model\scaler.pkl", "rb"))
+model = pickle.load(open(r"D:\GITHUB\Customer Segmentation\model\model.pkl", "rb"))
+scaler = pickle.load(open(r"D:\GITHUB\Customer Segmentation\model\scaler.pkl", "rb"))
 
 st.markdown(
     "<h1 style='text-align: center;'>Customer Segmentation App</h1>",
@@ -90,7 +90,9 @@ if page == "Home":
     © 2026 Customer Segmentation Project | Built with Streamlit
     </div>
     """, unsafe_allow_html=True)
+
 elif page == "Predict":
+
     customer_id = st.text_input("Enter Customer Id : ")
     income = st.number_input("Annual income (k$)", min_value=0)
     spending_score = st.number_input("Spending score (1-100)", min_value=1, max_value=100)
@@ -98,56 +100,55 @@ elif page == "Predict":
     input_data = np.array([[income, spending_score]])
     scaled_input = scaler.transform(input_data)
 
-    if st.button("Predict the Cluter"):
+    if st.button("Predict the Cluster"):
+
         prediction = model.predict(scaled_input)
+
+        # Save user data
+        st.session_state["user_point"] = scaled_input
+        st.session_state["prediction"] = prediction[0]
+
         if prediction[0] == 0:
-            st.write(f"Customer {customer_id} have Medium Income & have Medium Spending History.")
+            st.write(f"Customer {customer_id} have Medium Income & Medium Spending.")
         elif prediction[0] == 1:
-            st.write(f"Customer {customer_id} have High Income & have High Spending History.")
+            st.write(f"Customer {customer_id} have High Income & High Spending.")
         elif prediction[0] == 2:
-            st.write(f"Customer {customer_id} have Low Income & have High Spending History.")
+            st.write(f"Customer {customer_id} have Low Income & High Spending.")
         elif prediction[0] == 3:
-            st.write(f"Customer {customer_id} have High Income & Low Spending History.")
+            st.write(f"Customer {customer_id} have High Income & Low Spending.")
         elif prediction[0] == 4:
-            st.write(f"Customer {customer_id} have Low Income & have Low Spending History.")
+            st.write(f"Customer {customer_id} have Low Income & Low Spending.")
 
         st.success(f"Customer belongs to Cluster {prediction[0]}")
 
 elif page == "Visualization":
 
-    
     st.subheader("📊 Customer Segmentation Visualization")
 
-    # Load dataset (use relative path)
-    df = pd.read_excel(r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\data\Mall Customers.xlsx")
-    # Select features
-    X = df[["Annual Income (k$)", "Spending Score (1-100)"]]
+    df = pd.read_excel(r"D:\GITHUB\Customer Segmentation\data\Mall Customers.xlsx")
 
-    # Scale data
+    X = df[['Annual Income (k$)', 'Spending Score (1-100)']]
     X_scaled = scaler.transform(X)
 
-    # Predict clusters
-    clusters = model.predict(X_scaled)
-
-    # Add cluster column
-    df["Cluster"] = clusters
-
-    # Plot
     fig, ax = plt.subplots()
 
-    scatter = ax.scatter(
-        df["Annual Income (k$)"],
-        df["Spending Score (1-100)"],
-        c=df["Cluster"]
-    )
+    # Plot all customers
+    ax.scatter(X_scaled[:,0], X_scaled[:,1], c=model.labels_, alpha=0.5)
 
-    ax.set_xlabel("Annual Income (k$)")
-    ax.set_ylabel("Spending Score (1-100)")
-    ax.set_title("Customer Clusters")
+    # Plot cluster centers
+    centers = model.cluster_centers_
+    ax.scatter(centers[:,0], centers[:,1], marker='X', color = 'blue', s=250, label="Cluster Centers")
+
+    # Plot user point if exists
+    if "user_point" in st.session_state:
+        user_point = st.session_state["user_point"]
+        cluster = st.session_state["prediction"]
+
+        ax.scatter(user_point[:,0], user_point[:,1],
+                   color='red', s=250, label=f"User (Cluster {cluster})")
+
+    ax.set_xlabel("Annual Income")
+    ax.set_ylabel("Spending Score")
+    ax.legend()
 
     st.pyplot(fig)
-
-    st.write("""
-    Each color represents a different customer segment identified 
-    by the K-Means clustering algorithm.
-    """)
