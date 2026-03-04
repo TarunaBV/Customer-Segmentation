@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Customer Cluster Predictor", page_icon="🤖")
 
-model = pickle.load(open(r"D:\GITHUB\Customer Segmentation\model\model.pkl", "rb"))
-scaler = pickle.load(open(r"D:\GITHUB\Customer Segmentation\model\scaler.pkl", "rb"))
+model = pickle.load(open(r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\model\model.pkl", "rb"))
+scaler = pickle.load(open(r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\model\scaler.pkl", "rb"))
 
 st.markdown(
     "<h1 style='text-align: center;'>Customer Segmentation App</h1>",
@@ -19,61 +19,108 @@ st.sidebar.title("Navigation 🧭")
 page = st.sidebar.radio("Go to", ["Home", "Predict", "Visualization"])
 
 if page == "Home":
-     # Hero Section
     st.markdown("""
-    <div style='text-align:center; padding: 60px 20px;'>
-        <h1 style='font-size:40px; color:#4CAF50;'>
-        Customer Insights Dashboard
-        </h1>
-        <p style='font-size:22px; color:gray;'>
-        Discover meaningful customer groups using advanced machine learning.
-        </p>
-    </div>
+        <style>
+        .block-container {
+            max-width: 90%;
+            padding-top: 2rem;
+            padding-left: 3rem;
+            padding-right: 3rem;
+        }
+        </style>
     """, unsafe_allow_html=True)
 
-    st.markdown("---")
 
-    # Features Section
-    col1, col2, col3 = st.columns(3)
+    # HERO SECTION (Insights + Cluster Description side by side)
+    col1, col2 = st.columns([2,2])
 
     with col1:
         st.markdown("""
-        <div style='padding:20px; border-radius:10px; background-color:#f5f5f5;'>
-            <h3>📊 Data Analysis</h3>
-            <p>
-            Analyze annual income and spending patterns 
-            to identify hidden customer segments.
+        <div style='padding:40px 10px;'>
+            <h1 style='font-size:42px; color:#4CAF50;'>
+            Customer Insights Dashboard
+            </h1>
+            <p style='font-size:20px; color:gray;'>
+            Discover meaningful customer groups using machine learning powered segmentation.
+            This platform helps businesses analyze customer income and spending patterns
+            to identify valuable customer segments and make smarter marketing decisions.
             </p>
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
-        <div style='padding:20px; border-radius:10px; background-color:#f5f5f5;'>
+          <div style='padding:30px; border-radius:12px; background-color:#f5f5f5; color:#1f1f1f;'>
+
+    <h2 style='color:#1f1f1f;'>Customer Segments</h2>
+
+
+    <p style='font-size:20px;'>
+    <b>Cluster 0</b> → Medium Income & Medium Spending
+    </p>
+
+    <p style='font-size:20px;'>
+    <b>Cluster 1</b> → High Income & High Spending
+    </p>
+
+    <p style='font-size:20px;'>
+    <b>Cluster 2</b> → Low Income & High Spending
+    </p>
+
+    <p style='font-size:20px;'>
+    <b>Cluster 3</b> → High Income & Low Spending
+    </p>
+
+    <p style='font-size:20px;'>
+    <b>Cluster 4</b> → Low Income & Low Spending
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("---")
+
+    # FEATURE CARDS
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.markdown("""
+        <div style='padding:20px; border-radius:10px; background-color:#f5f5f5; color:#1f1f1f;'>
+            <h3>📊 Data Analysis</h3>
+            <p>
+            Analyze annual income and spending patterns 
+            to discover hidden customer segments.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("""
+        <div style='padding:20px; border-radius:10px; background-color:#f5f5f5;color:#1f1f1f;'>
             <h3>🤖 ML Powered</h3>
             <p>
-            Built using K-Means clustering with 
-            optimized cluster selection.
+            Uses K-Means clustering algorithm to automatically 
+            group customers with similar behaviors.
             </p>
         </div>
         """, unsafe_allow_html=True)
 
     with col3:
         st.markdown("""
-        <div style='padding:20px; border-radius:10px; background-color:#f5f5f5;'>
+        <div style='padding:20px; border-radius:10px; background-color:#f5f5f5;color:#1f1f1f;'>
             <h3>🎯 Business Impact</h3>
             <p>
-            Enables targeted marketing, customer retention,
-            and strategic decision making.
+            Helps businesses design targeted marketing strategies 
+            and improve customer engagement.
             </p>
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    # Call To Action
+    # CALL TO ACTION
     st.markdown("""
-    <div style='text-align:center; padding: 40px;'>
+    <div style='text-align:center; padding:20px;'>
         <h2>Ready to Explore Insights?</h2>
         <p style='color:gray; font-size:18px;'>
         Use the navigation menu to predict customer segments 
@@ -84,9 +131,9 @@ if page == "Home":
 
     st.markdown("---")
 
-    # Footer
+    # FOOTER
     st.markdown("""
-    <div style='text-align:center; color:gray; padding:20px;'>
+    <div style='text-align:center; color:gray; padding:15px; font-size:14px;'>
     © 2026 Customer Segmentation Project | Built with Streamlit
     </div>
     """, unsafe_allow_html=True)
@@ -125,7 +172,7 @@ elif page == "Visualization":
 
     st.subheader("📊 Customer Segmentation Visualization")
 
-    df = pd.read_excel(r"D:\GITHUB\Customer Segmentation\data\Mall Customers.xlsx")
+    df = pd.read_excel(r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\data\Mall Customers.xlsx")
 
     X = df[['Annual Income (k$)', 'Spending Score (1-100)']]
     X_scaled = scaler.transform(X)
