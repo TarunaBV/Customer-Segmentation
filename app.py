@@ -71,12 +71,12 @@ if page == "Dashboard":
 
         # Load model
         model = pickle.load(open(
-            r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\model\model.pkl",
+            r"model\model.pkl",
             "rb"
         ))
 
         scaler = pickle.load(open(
-            r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\model\scaler.pkl",
+            r"model\scaler.pkl",
             "rb"
         ))
 
@@ -132,62 +132,77 @@ if page == "Dashboard":
 
 elif page == "Visualization":
 
-    st.set_page_config(
-        page_title="Visualization",
-        page_icon="📊",
-        layout="centered"
-    )
-
     st.title("Customer Segmentation Visualization")
 
-    # Load data
+    # Load dataset
     df = pd.read_excel(
-        r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\data\Mall Customers.xlsx"
+        r"data\Mall Customers.xlsx"
     )
 
     model = pickle.load(open(
-        r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\model\model.pkl",
+        r"model\model.pkl",
         "rb"
     ))
 
     scaler = pickle.load(open(
-        r"C:\Users\vaish\OneDrive\Documents\GitHub\Customer-Segmentation\model\scaler.pkl",
+        r"model\scaler.pkl",
         "rb"
     ))
 
     X = df[['Annual Income (k$)', 'Spending Score (1-100)']]
     X_scaled = scaler.transform(X)
 
-    fig, ax = plt.subplots()
+    # Smaller figure size
+    fig, ax = plt.subplots(figsize=(6,5))
 
-    ax.scatter(X_scaled[:,0], X_scaled[:,1], c=model.labels_, alpha=0.6)
+    # Plot dataset clusters
+    ax.scatter(
+        X_scaled[:,0],
+        X_scaled[:,1],
+        c=model.labels_,
+        cmap="viridis",
+        alpha=0.6
+    )
 
+    # Plot cluster centers
     centers = model.cluster_centers_
 
     ax.scatter(
         centers[:,0],
         centers[:,1],
         marker='X',
-        color='blue',
-        s=250,
-        label="Cluster Centers"
+        color='black',
+        s=200
     )
 
+    # Label each cluster center
+    for i, center in enumerate(centers):
+        ax.text(
+            center[0] + 0.05,
+            center[1] + 0.05,
+            f"Cluster {i}",
+            fontsize=11,
+            color="black",
+            weight="bold"
+        )
+
+    # Plot user prediction point (red dot only)
     if "user_point" in st.session_state:
 
         user_point = st.session_state["user_point"]
-        cluster = st.session_state["prediction"]
 
         ax.scatter(
             user_point[:,0],
             user_point[:,1],
             color='red',
             s=250,
-            label=f"User (Cluster {cluster})"
+            edgecolors="black",
+            linewidth=1.5
         )
 
     ax.set_xlabel("Annual Income")
     ax.set_ylabel("Spending Score")
-    ax.legend()
 
-    st.pyplot(fig)
+    ax.grid(alpha=0.3)
+
+    st.pyplot(fig, use_container_width=True)
