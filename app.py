@@ -70,15 +70,9 @@ if page == "Dashboard":
         )
 
         # Load model
-        model = pickle.load(open(
-            r"model\model.pkl",
-            "rb"
-        ))
+        model = pickle.load(open("model/model.pkl","rb"))
 
-        scaler = pickle.load(open(
-            r"model\scaler.pkl",
-            "rb"
-        ))
+        scaler = pickle.load(open("model/scaler.pkl","rb"))
 
         input_data = np.array([[income, spending_score]])
         scaled_input = scaler.transform(input_data)
@@ -135,19 +129,10 @@ elif page == "Visualization":
     st.title("Customer Segmentation Visualization")
 
     # Load dataset
-    df = pd.read_excel(
-        r"data\Mall Customers.xlsx"
-    )
+    model = pickle.load(open("model/model.pkl","rb"))
+    scaler = pickle.load(open("model/scaler.pkl","rb"))
 
-    model = pickle.load(open(
-        r"model\model.pkl",
-        "rb"
-    ))
-
-    scaler = pickle.load(open(
-        r"model\scaler.pkl",
-        "rb"
-    ))
+    df = pd.read_excel("data/Mall Customers.xlsx")
 
     X = df[['Annual Income (k$)', 'Spending Score (1-100)']]
     X_scaled = scaler.transform(X)
